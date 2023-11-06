@@ -9,4 +9,15 @@
  - 속도 센서 이용, 어린이 보호구역 과속예방 차단기
  - ✅ 유독가스, 화학물질 등 누출 알림 및 계량시스템
 
+# 주요기능
+
+# 초기 유의사항
+ - 장비의 유무
+   - 프로젝트 진행에 있어 주요 장비인 <b>Smoke sensor</b>가 구비 되어있는지
+     > Smoke sensor 대신 미세먼지 센서를 이용한 공기정화 알림 등의 주제로 변경하여 진행
+
 # 참조
+ - 세미넷: [라즈베리파이] 화재 및 가스 누출 경보기
+   > https://www.seminet.co.kr/channel_micro.html?menu=video_sub&com_no=918&video_id=7498&cate_no=44&cate_name=Raspberry+pi
+ - DBpia: 라즈베리파이와 가스센서를 이용한 화재 및 가스누출 감지기 개발
+   > https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE07467666
