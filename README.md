@@ -1,5 +1,5 @@
 # 👑 무선네트워크 프로젝트 2조
-## 👩‍👩‍👦 조원 : 안재민(jaemin-i), 신지성(jssdre), 강교진(gyojinnK), 김인기(ikk5515), 최지혁, 조광연(ebcsrh)
+## 👩‍👩‍👦 조원 : 안재민(jaemin-i), 신지성(jssdre), 강교진(gyojinnK), 김인기(ikk5515), 최지혁(choiji12), 조광연(ebcsrh)
 <hr/>
 
 # 🤔 아이디어
