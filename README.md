@@ -54,6 +54,10 @@
 [시스템 아키텍처](https://github.com/inhatc-RPi/project/assets/97776614/6d4d0a44-cc4d-4861-b40e-e0edcae7d953)
 ![시스템아키텍처](https://github.com/inhatc-RPi/project/assets/97776614/6d4d0a44-cc4d-4861-b40e-e0edcae7d953)
 
+# 진행사항
+ > api 설계
+  - 구조
+<img width="1406" alt="스크린샷 2023-11-20 오후 9 45 58" src="https://github.com/inhatc-RPi/project/assets/113239209/3a56a991-b00a-47bd-97b2-47c2425479a9">
 
 
 # #️ 참조
