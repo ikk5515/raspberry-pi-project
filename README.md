@@ -56,10 +56,8 @@
 
 # 진행사항
  > api 설계
-  - 구조
-  <img width="1406" alt="스크린샷 2023-11-20 오후 9 45 58" src="https://github.com/inhatc-RPi/project/assets/113239209/3a56a991-b00a-47bd-97b2-47c2425479a9">
-  - /view/{sensor}
-  <img width="266" alt="스크린샷 2023-11-20 오후 11 39 30" src="https://github.com/inhatc-RPi/project/assets/113239209/1d8fe4ef-a965-4ac2-bb43-d3cc4a8ea059">
+  - 구조<img width="1406" alt="스크린샷 2023-11-20 오후 9 45 58" src="https://github.com/inhatc-RPi/project/assets/113239209/3a56a991-b00a-47bd-97b2-47c2425479a9">
+  - /view/{sensor}<img width="834" alt="스크린샷 2023-11-21 오전 12 05 41" src="https://github.com/inhatc-RPi/project/assets/113239209/5e1fbf30-734c-4133-90d8-9d3e2a14b770">
   - /change
 <img width="828" alt="스크린샷 2023-11-20 오후 9 44 32" src="https://github.com/inhatc-RPi/project/assets/113239209/7a7b0f5c-9b97-421d-871a-6395c02e2028">
 
