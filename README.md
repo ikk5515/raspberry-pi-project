@@ -61,6 +61,7 @@
   - /view/{sensor}
 <img width="266" alt="스크린샷 2023-11-20 오후 11 39 30" src="https://github.com/inhatc-RPi/project/assets/113239209/1d8fe4ef-a965-4ac2-bb43-d3cc4a8ea059">
   - /change
+<img width="828" alt="스크린샷 2023-11-20 오후 9 44 32" src="https://github.com/inhatc-RPi/project/assets/113239209/7a7b0f5c-9b97-421d-871a-6395c02e2028">
 
 
 
