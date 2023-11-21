@@ -2,7 +2,7 @@ name: Deploy to cloudtype
 on:
   push:
     paths:
-      - 'back'
+      - 'back/**'
     branches:
       - main
 jobs:
