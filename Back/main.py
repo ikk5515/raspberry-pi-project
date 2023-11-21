@@ -1,10 +1,28 @@
 from fastapi import FastAPI, WebSocket, Request
+from typing import List
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
+from starlette.middleware.cors import CORSMiddleware
+from starlette.staticfiles import StaticFiles
 from starlette.websockets import WebSocketDisconnect
 
-templates = Jinja2Templates(directory="templates")
+from database import session
+from models import SensorTable, Sensor
+
+templates = Jinja2Templates(directory="templates") # 템플릿 사용
+
 app = FastAPI()
+
+app.mount("/static", StaticFiles(directory="static"), name="static")  # 정적파일 경로설정
+
+# 미들웨어 설정
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 class Item(BaseModel):
     name: str
@@ -15,10 +33,33 @@ class Item(BaseModel):
 async def home(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
+# DB 연동 api
+# 모든 센서 정보
+@app.get("/sensors")
+def read_sensors():
+    sensors = session.query(SensorTable).all()
+    return sensors
+
+# 특정 센서 정보
+@app.get("/sensors/{sensor_name}")
+def read_sensor(sensor_name: str):
+    sensor = session.query(SensorTable).filter(SensorTable.sensor_name == sensor_name).first()
+    return sensor
+
+# 센서 주기 변경
+# @app.put("/change/{sensor_name}")
+# def change_cycle(sensors : List[Sensor], sensor_name: str):
+#     sensor = session.query(SensorTable).filter(SensorTable.sensor_name == sensor_name).first()
+#
+
 # 웹 소켓 연결
+connected_clients = set()
+
 @app.websocket("/ws")
 async def websocket_sensor_data(websocket: WebSocket):
     await websocket.accept() # client의 websocket접속 허용
+    connected_clients.add(websocket)
+
     try:
         while True:
             data = await websocket.receive_text()  # client 메시지 수신대기
@@ -27,7 +68,8 @@ async def websocket_sensor_data(websocket: WebSocket):
             global testValue # 받아온 data 전역 변수로 사용
             testValue = data
 
-            await websocket.send_text(f"Message text was: {data}") # client에 메시지 전달
+            server_value = "tttt"
+            await websocket.send_text({server_value}) # client에 메시지 전달
 
     except WebSocketDisconnect:
         print(f"WebSocket connection disconnected")
