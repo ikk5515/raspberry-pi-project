@@ -1,8 +1,6 @@
 name: Deploy to cloudtype
 on:
   push:
-    paths:
-      - 'back/**'
     branches:
       - main
 jobs:
@@ -16,13 +14,13 @@ jobs:
         with:
           token: ${{ secrets.CLOUDTYPE_TOKEN }}
           ghtoken: ${{ secrets.GHP_TOKEN }}
-      - name: Install build dependencies
+      - name: Install pkg-config
         run: |
           sudo apt-get update
-          sudo apt-get install -y pkg-config libmysqlclient-dev
+          sudo apt-get install -y pkg-config
       - name: Install dependencies
         run: |
-          pip install -r back/requirements.txt
+          pip install -r requirements.txt
       - name: Deploy
         uses: cloudtype-github-actions/deploy@v1
         with:
@@ -34,7 +32,7 @@ jobs:
             app: python@3.9
             options:
               ports: 8000
-              start: uvicorn back/main:app --host=0.0.0.0 --port=8000
+              start: uvicorn main:app --host=0.0.0.0 --port=8000
               nodeversion: "14"
               install: ""
             context:
