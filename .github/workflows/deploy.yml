@@ -32,7 +32,7 @@ jobs:
             app: python@3.7
             options:
               ports: 8000
-              start: uvicorn.run(app, host="0.0.0.0", port=8000)
+              start: uvicorn main:app --host=0.0.0.0 --port=8000
               nodeversion: "14"
               install: ""
             context:
