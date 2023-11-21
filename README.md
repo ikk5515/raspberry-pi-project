@@ -54,13 +54,21 @@
 [시스템 아키텍처](https://github.com/inhatc-RPi/project/assets/97776614/6d4d0a44-cc4d-4861-b40e-e0edcae7d953)
 ![시스템아키텍처](https://github.com/inhatc-RPi/project/assets/97776614/6d4d0a44-cc4d-4861-b40e-e0edcae7d953)
 
-
+# 진행사항
+ > api 설계
+  - 구조
+    <img width="1406" alt="스크린샷 2023-11-20 오후 9 45 58" src="https://github.com/inhatc-RPi/project/assets/113239209/3a56a991-b00a-47bd-97b2-47c2425479a9">
+  - /view/{sensor}
+    <img width="834" alt="스크린샷 2023-11-21 오전 12 05 41" src="https://github.com/inhatc-RPi/project/assets/113239209/5e1fbf30-734c-4133-90d8-9d3e2a14b770">
+  - /change/
+   <img width="828" alt="스크린샷 2023-11-20 오후 9 44 32" src="https://github.com/inhatc-RPi/project/assets/113239209/7a7b0f5c-9b97-421d-871a-6395c02e2028">
+   
 
 # #️ 참조
  - 교수님GitHub: [2023_inhatc](https://github.com/sonnonet/2023_inhatc)
  - 세미넷: [라즈베리파이를 이용한 화재 및 가스 누출 경보기](https://www.seminet.co.kr/channel_micro.html?menu=video_sub&com_no=918&video_id=7498&cate_no=44&cate_name=Raspberry+pi)
  - DBpia: [라즈베리파이와 가스센서를 이용한 화재 및 가스누출 감지기 개발](https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE07467666)
-
+ - vue_api: [vue와 api연동](https://jeong-dev-blog.tistory.com/4)
 
 
 
