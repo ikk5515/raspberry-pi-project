@@ -20,9 +20,13 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y pkg-config
-          # Install build dependencies for mysqlclient
-          sudo apt-get install -y libmysqlclient-dev
-          pip install -r requirements.txt
+          sudo apt-get install -y libmysqlclient-dev  # Add this line for mysqlclient dependencies
+
+      - name: Install Python dependencies
+        run: |
+          if [ -f "./requirements.txt" ]; then
+            pip install -r requirements.txt
+          fi
 
       - name: Deploy
         uses: cloudtype-github-actions/deploy@v1
