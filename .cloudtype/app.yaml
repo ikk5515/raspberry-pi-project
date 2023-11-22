@@ -9,3 +9,4 @@ context:
     url: https://github.com/ikk5515/raspberry-pi-project.git
     branch: main
   preset: dockerfile
+  path: Back
