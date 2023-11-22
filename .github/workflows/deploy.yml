@@ -1,8 +1,3 @@
-name: Deploy to cloudtype
-on:
-  push:
-    branches:
-      - main
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -27,7 +22,6 @@ jobs:
           if [ -f "./requirements.txt" ]; then
             pip install -r requirements.txt
           fi
-
       - name: Deploy
         uses: cloudtype-github-actions/deploy@v1
         with:
@@ -36,14 +30,13 @@ jobs:
           stage: main
           yaml: |
             name: raspberry-pi-project
-            app: python@3.9
+            app: dockerfile
             options:
               ports: 8000
-              start: uvicorn main:app --host=0.0.0.0 --port=8000
-              nodeversion: "14"
-              install: ""
+              dockerfile: Dockerfile
+              shell: /bin/bash
             context:
               git:
                 url: git@github.com:${{ github.repository }}.git
                 ref: ${{ github.ref }}
-                path: Back
+              preset: dockerfile
