@@ -3,10 +3,11 @@ app: dockerfile
 options:
   ports: 8000
   dockerfile: Dockerfile
-  shell: /bin/bash
+  shell: /bin/zsh
 context:
   git:
-    url: https://github.com/ikk5515/raspberry-pi-project.git
+    url: git@github.com:ikk5515/raspberry-pi-project.git
+    ref: refs/heads/main
     branch: main
+    path: "Back"
   preset: dockerfile
-  path: Back
