@@ -9,5 +9,5 @@ context:
     url: git@github.com:ikk5515/raspberry-pi-project.git
     ref: refs/heads/main
     branch: main
-    path: "Back"
+    path: ""
   preset: dockerfile
