@@ -3,5 +3,4 @@ jinja2
 websockets
 sqlalchemy
 pymysql
-pkg-config
 mysqlclient
