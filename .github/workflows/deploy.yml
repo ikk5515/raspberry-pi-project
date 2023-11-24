@@ -25,7 +25,7 @@ jobs:
         uses: cloudtype-github-actions/deploy@v1
         with:
           token: ${{ secrets.CLOUDTYPE_TOKEN }}
-          project: ikk5515/raspberry-pi-project
+          project: ikk5515/ras
           stage: main
           yaml: |
             name: raspberry-pi-project
