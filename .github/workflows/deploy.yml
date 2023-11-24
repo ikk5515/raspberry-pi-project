@@ -14,11 +14,16 @@ jobs:
         with:
           token: ${{ secrets.CLOUDTYPE_TOKEN }}
           ghtoken: ${{ secrets.GHP_TOKEN }}
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pkg-config
+          pip install -r requirements.txt
       - name: Deploy
         uses: cloudtype-github-actions/deploy@v1
         with:
           token: ${{ secrets.CLOUDTYPE_TOKEN }}
-          project: ikk5515/ras
+          project: ikk5515/raspberry-pi-project
           stage: main
           yaml: |
             name: raspberry-pi-project
@@ -26,8 +31,13 @@ jobs:
             options:
               ports: 8000
               start: uvicorn main:app --host=0.0.0.0 --port=8000
-              install: pip install -r requirements.txt
+              nodeversion: "14"
+              install: |
+                apt-get update
+                apt-get install -y pkg-config
+                pip install -r requirements.txt
             context:
               git:
                 url: git@github.com:${{ github.repository }}.git
                 ref: ${{ github.ref }}
+                path: Back
