@@ -98,6 +98,8 @@ async def view_value(sensor: str):
 # 센서 측정 주기 변경
 @app.post("/change/")
 async def change_cycle(item: Item):
+    # 소켓통신으로 입력받은 주기 넘기기
+
     return item
 
 if __name__ == "__main__":
