@@ -29,6 +29,8 @@ async def send_data():
                         await websocket.send(temp_data)
                     else:
                         print("가스 미감지")
+            except:
+                print("Error")
             finally:
                 # try 구문 종료 후 GPIO핀 초기화
                 GPIO.cleanup() 
