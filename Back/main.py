@@ -5,6 +5,7 @@ from pydantic import BaseModel
 from starlette.middleware.cors import CORSMiddleware
 from starlette.staticfiles import StaticFiles
 from starlette.websockets import WebSocketDisconnect
+from datetime import datetime
 
 from database import session
 from models import SensorTable, Sensor
@@ -65,17 +66,29 @@ async def websocket_sensor_data(websocket: WebSocket):
             data = await websocket.receive_text()  # client 메시지 수신대기
             print(f"message received : {data} from : {websocket.client}")
 
+            # DB 저장 로직
+            sensor_name, measure_value = data.split(":")
+            print(sensor_name, '///', measure_value, '///', datetime.now())
+
+            mea_value = SensorTable(
+                sensor_name=sensor_name,
+                measure_value=float(measure_value),
+                measure_time=datetime.now(),
+            )
+
+            session.add(mea_value)
+            session.commit()
+
             global testValue # 받아온 data 전역 변수로 사용
             testValue = data
 
-            server_value = "tttt"
-            await websocket.send_text({server_value}) # client에 메시지 전달
+            # server_value = "tttt"
+            # await websocket.send_text({server_value}) # client에 메시지 전달
 
     except WebSocketDisconnect:
         print(f"WebSocket connection disconnected")
     except Exception as e:
         print(f"WebSocket connection closed: {e}")
-
 
 # 센서 값 확인
 @app.get("/view/{sensor}")
@@ -85,6 +98,8 @@ async def view_value(sensor: str):
 # 센서 측정 주기 변경
 @app.post("/change/")
 async def change_cycle(item: Item):
+    # 소켓통신으로 입력받은 주기 넘기기
+
     return item
 
 if __name__ == "__main__":
