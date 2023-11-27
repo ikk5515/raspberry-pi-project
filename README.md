@@ -62,6 +62,11 @@
     <img width="834" alt="스크린샷 2023-11-21 오전 12 05 41" src="https://github.com/inhatc-RPi/project/assets/113239209/5e1fbf30-734c-4133-90d8-9d3e2a14b770">
   - /change/ <br>
     <img width="828" alt="스크린샷 2023-11-20 오후 9 44 32" src="https://github.com/inhatc-RPi/project/assets/113239209/7a7b0f5c-9b97-421d-871a-6395c02e2028">
+    <br><br><br><br>
+
+ > cloudtype을 이용한 백엔드 배포
+  <img width="1186" alt="스크린샷 2023-11-27 오후 11 43 06" src="https://github.com/inhatc-RPi/project/assets/22267184/fc12d31c-b572-47f5-9104-3399d4d918e4">
+
    
 
 # #️ 참조
