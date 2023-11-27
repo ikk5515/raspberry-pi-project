@@ -49,7 +49,7 @@
 
 # 진행사항
 <h3>2023.11.12 ~ 2023.11.19</h3>
- <ul>
+ <ol>
   <h3>api 설계</h3>
   <li>
    <p>구조</p>
@@ -63,15 +63,22 @@
    <p>/change/</p>
     <img width="828" alt="스크린샷 2023-11-20 오후 9 44 32" src="https://github.com/inhatc-RPi/project/assets/113239209/7a7b0f5c-9b97-421d-871a-6395c02e2028">
    </li>
-</ul> 
+</ol> 
 <br><br><br>
     
 <h3>2023.11.20 ~ 2023.11.27</h3>
- > cloudtype을 이용한 백엔드 배포
+ <ol>
+  <li>
+  <h3>cloudtype을 이용한 백엔드 배포</h3>
   <img width="1186" alt="스크린샷 2023-11-27 오후 11 43 06" src="https://github.com/inhatc-RPi/project/assets/22267184/fc12d31c-b572-47f5-9104-3399d4d918e4">
-
- > 
-
+  </li>
+  <li>
+   <h3>라즈베리파이 데이터 송수신 구현</h3>
+   
+   ![무선넷_시스템_아키텍처의 사본](https://github.com/inhatc-RPi/project/assets/97776614/9e233a1f-6234-4332-9016-b6cef2b0379d)
+   
+  </li>
+ </ol>
    
 
 # #️ 참조
