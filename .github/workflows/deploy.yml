@@ -21,6 +21,11 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
+      - name: access to secrets
+        run: |
+          echo "DATABASE_URL=$DATABASE_URL" >> .env
+        env:
+          DATABASE_URL: ${{secrets.SERVER_CONNECT}}
       - name: Deploy
         uses: cloudtype-github-actions/deploy@v1
         with:
