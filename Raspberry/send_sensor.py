@@ -7,7 +7,7 @@ import time
 
 GPIO.setmode(GPIO.BCM) # GPIO 핀 번호 지정
 
-async def send_data():
+async def send_data(tmp_data):
     uri = "ws://#:8000/ws"
     
     async with websockets.connect(uri) as websocket:
@@ -24,11 +24,13 @@ async def send_data():
                     if GPIO.input(MQ5_pin) == 1:
                         print("가스 감지")
                         print(type(GPIO.input(MQ5_pin)))
-                        temp_data = "test"
+                        temp_data = tmp_data
             
                         await websocket.send(temp_data)
                     else:
                         print("가스 미감지")
+            except:
+                print("Error")
             finally:
                 # try 구문 종료 후 GPIO핀 초기화
                 GPIO.cleanup() 

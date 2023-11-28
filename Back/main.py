@@ -6,7 +6,6 @@ from starlette.middleware.cors import CORSMiddleware
 from starlette.staticfiles import StaticFiles
 from starlette.websockets import WebSocketDisconnect
 from datetime import datetime
-
 from database import session
 from models import SensorTable, Sensor
 
@@ -55,11 +54,14 @@ def read_sensor(sensor_name: str):
 
 # 웹 소켓 연결
 connected_clients = set()
+websocket_global = None
 
 @app.websocket("/ws")
 async def websocket_sensor_data(websocket: WebSocket):
-    await websocket.accept() # client의 websocket접속 허용
+    global websocket_global
+    await websocket.accept()  # client의 websocket접속 허용
     connected_clients.add(websocket)
+    websocket_global = websocket
 
     try:
         while True:
@@ -81,7 +83,6 @@ async def websocket_sensor_data(websocket: WebSocket):
 
             global testValue # 받아온 data 전역 변수로 사용
             testValue = data
-
             # server_value = "tttt"
             # await websocket.send_text({server_value}) # client에 메시지 전달
 
@@ -96,10 +97,12 @@ async def view_value(sensor: str):
     return {"message": f"{sensor}의 측정 값 : {testValue}"}
 
 # 센서 측정 주기 변경
-@app.post("/change/")
+@app.post("/change")
 async def change_cycle(item: Item):
     # 소켓통신으로 입력받은 주기 넘기기
-
+    global websocket_global
+    if websocket_global:
+        await websocket_global.send_text(f"cycle:{item.cycle}")
     return item
 
 if __name__ == "__main__":
