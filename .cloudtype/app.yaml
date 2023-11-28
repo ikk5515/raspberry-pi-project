@@ -4,8 +4,9 @@ options:
   ports: 8000
   start: uvicorn main:app --host=0.0.0.0 --port=8000
   install: pip install -r requirements.txt
-  environment:
-    DB_URL: ${{ secrets.SERVER_CONNECT }}
+  env: 
+    - name: .env
+      secret: FASTAPI_ENV
 context:
   git:
     url: https://github.com/ikk5515/raspberry-pi-project.git
