@@ -10,23 +10,26 @@ def main():
 
     while True:
         line = port.readline()     # 시리얼모니터 한 줄 ( ~~ 센서 인식값 : @@@ )
-        print(line.decode())
-        arr = str(line).replace(" ", "").split(":")
+        print(line.decode())      # 수신값 확인
+        arr = str(line).replace(" ", "").split(":")   # 원본 데이터: mq5:425.00
         
         if len(arr) < 1:   # 인식값이 아니면..
             continue
 
         temp_data = ""
 
-        dataType = arr[0]       # 온도 or 습도 or 가스
-        data = arr[1]
+        dataType = arr[0]     # mq5, mq7
+        data = arr[1]       # data
         if dataType == 'mq5':
             temp_data += "mq5 : " + data + "\n"
         elif dataType == 'mq7':
             temp_data += "mq7 : " + data + "\n"   # 센서 구별 -> 보내기  더 좋은 방법 찾아보기
 
         print(temp_data)
-        
+
+        # _Plan_
+        # Raspberry/send_sensor.py/send_data 호출 오류 해결
+        # 백엔드로 데이서 송신 방법 추가로 알아보기
         send_sensor.send_data(temp_data)
         
         time.sleep(0.01)
