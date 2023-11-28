@@ -1,10 +1,9 @@
+//#define DHTPIN @@@  // 온습도 핀 번호
+//#define DHTTYPE @@@    // 센서 (DHT11)
+#define MQ5pin 3 // 가스센서 핀 번호
 
-#define DHTPIN @@@  // 온습도 핀 번호
-#define DHTTYPE @@@    // 센서 (DHT11)
-#define MQ2pin @@@ // 가스센서 핀 번호
 
-
-DHT dht(DHTPIN, DHTTYPE)
+//DHT dht(DHTPIN, DHTTYPE)
 
 int chk;
 float gas;    // 가스 센서
@@ -13,14 +12,14 @@ float temp;   // 온도
 
 
 void setup() {
-  serial.begin(9600);
+  Serial.begin(9600);
   // dht.begin();
 
 }
 
 void loop() {
   
-  delay(3000)
+  delay(3000);
 
 /*hum = dht.readHumidity();
   temp = dht.readTemperature();       //온습도 인식값
@@ -31,7 +30,7 @@ void loop() {
   Serial.print("온도 인식값 : ");  
   Serial.println("temp");  */
 
-  gas = analogRead(MQ2pin);       // 가스센서 인식값
+  gas = analogRead(MQ5pin);       // 가스센서 인식값
 
   Serial.print("가스센서 인식값 : ");   
   Serial.println(gas);
