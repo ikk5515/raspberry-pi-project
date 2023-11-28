@@ -1,4 +1,4 @@
-python-dotenvannotated-types
+python-dotenv-annotated-types
 anyio
 click
 fastapi
