@@ -83,7 +83,6 @@ async def websocket_sensor_data(websocket: WebSocket):
 
             global testValue # 받아온 data 전역 변수로 사용
             testValue = data
-
             # server_value = "tttt"
             # await websocket.send_text({server_value}) # client에 메시지 전달
 
