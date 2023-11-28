@@ -1,4 +1,3 @@
-python-dotenvannotated-types
 anyio
 click
 fastapi
