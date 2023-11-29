@@ -48,8 +48,9 @@
 ![시스템아키텍처](https://github.com/inhatc-RPi/project/assets/97776614/6d4d0a44-cc4d-4861-b40e-e0edcae7d953)
 
 # 배포 URL
-백엔드 엔드포인트: (https://port-0-raspberry-pi-project-5mk12alpbcv53c.sel5.cloudtype.app/)
-프론트엔드 URL: (https://choiji12.github.io/wireless_frontend/)
+- 백엔드 엔드포인트: (https://port-0-raspberry-pi-project-5mk12alpbcv53c.sel5.cloudtype.app/)
+
+- 프론트엔드 URL: (https://choiji12.github.io/wireless_frontend/)
 
 # 진행사항
 <h3>2023.11.12 ~ 2023.11.19</h3>
