@@ -43,7 +43,7 @@ def read_sensors():
 # 특정 센서 정보
 @app.get("/sensors/{sensor_name}")
 def read_sensor(sensor_name: str):
-    sensor = session.query(SensorTable).filter(SensorTable.sensor_name == sensor_name).first()
+    sensor = session.query(SensorTable).filter(SensorTable.sensor_name == sensor_name).all()
     return sensor
 
 # 센서 주기 변경
