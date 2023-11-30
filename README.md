@@ -100,7 +100,8 @@
    </ul>
 
    [이미지]
-   
+   <br>
+<img width="171" alt="스크린샷 2023-11-30 오후 2 16 51" src="https://github.com/inhatc-RPi/project/assets/22267184/b7b93353-8786-4356-8a84-b6a2c5854987">
   </li>
  </ol>
   <br>
