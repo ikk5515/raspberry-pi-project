@@ -39,14 +39,23 @@ async def home(request: Request):
 @app.get("/sensors")
 def read_sensors():
     # sensors = session.query(SensorTable).distinct(SensorTable.sensor_name).all()
-    sensors = session.query(SensorTable.sensor_name).distinct().all()
+    sensors = session.query(SensorTable.sensor_name).distinct().order_by(SensorTable.sensor_name).all()
     sensor_list = [sensor[0] for sensor in sensors]
     return sensor_list
 
 # 특정 센서 정보
 @app.get("/sensors/{sensor_name}")
 def read_sensor(sensor_name: str):
-    sensor = session.query(SensorTable).filter(SensorTable.sensor_name == sensor_name).all()
+    sensor = session.query(SensorTable).filter(SensorTable.sensor_name == sensor_name)\
+        .order_by(SensorTable.measure_time.desc()).first()
+    sensor_value = [{"sensor_name":sensor.sensor_name, "measure_value":sensor.measure_value}]
+    return sensor_value
+
+# 그래프 용 센서값 리스트
+@app.get("/sensors/graph/{sensor_name}")
+def read_graph(sensor_name: str):
+    sensor = session.query(SensorTable).filter(SensorTable.sensor_name == sensor_name)\
+        .order_by(SensorTable.measure_time.desc()).limit(25).all()
     return sensor
 
 # 센서 측정 주기 변경
