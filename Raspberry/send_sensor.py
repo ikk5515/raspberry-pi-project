@@ -2,38 +2,25 @@
 
 import websockets
 import asyncio
-import RPi.GPIO as GPIO
-import time
 
-GPIO.setmode(GPIO.BCM) # GPIO 핀 번호 지정
-
+temp_data = ""
 async def send_data(tmp_data):
+    # 로컬 테스트 시 사용
     uri = "ws://#:8000/ws"
-    
+    # 배포환경으로 테스트 시 사용
+    # uri = "wss://port-0-raspberry-pi-project-5mk12alpbcv53c.sel5.cloudtype.app/ws"
+
     async with websockets.connect(uri) as websocket:
-        while True:
-            # 센서 값 로직 추가
-            # setup
-            MQ5_pin = 2
-            GPIO.setup(MQ5_pin, GPIO.IN)
-            
-            # loop
-            try:
-                while True:
-                    time.sleep(2)
-                    if GPIO.input(MQ5_pin) == 1:
-                        print("가스 감지")
-                        print(type(GPIO.input(MQ5_pin)))
-                        temp_data = tmp_data
-            
-                        await websocket.send(temp_data)
-                    else:
-                        print("가스 미감지")
-            except:
-                print("Error")
-            finally:
-                # try 구문 종료 후 GPIO핀 초기화
-                GPIO.cleanup() 
-            
+        try:
+            temp_data = tmp_data
+            print(f"{temp_data} in try")
+
+            await websocket.send(temp_data)
+        except:
+            print("Error")
+        finally:
+            print(f"{temp_data} recieved")
+
+
 if __name__ == "__main__":
     asyncio.get_event_loop().run_until_complete(send_data())
