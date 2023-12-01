@@ -47,6 +47,11 @@
 [시스템 아키텍처](https://github.com/inhatc-RPi/project/assets/97776614/6d4d0a44-cc4d-4861-b40e-e0edcae7d953)
 ![시스템아키텍처](https://github.com/inhatc-RPi/project/assets/97776614/6d4d0a44-cc4d-4861-b40e-e0edcae7d953)
 
+# 배포 URL
+- 백엔드 엔드포인트: (https://port-0-raspberry-pi-project-5mk12alpbcv53c.sel5.cloudtype.app/)
+
+- 프론트엔드 URL: (https://choiji12.github.io/wireless_frontend/)
+
 # 진행사항
 <h3>2023.11.12 ~ 2023.11.19</h3>
  <ol>
@@ -64,7 +69,8 @@
     <img width="828" alt="스크린샷 2023-11-20 오후 9 44 32" src="https://github.com/inhatc-RPi/project/assets/113239209/7a7b0f5c-9b97-421d-871a-6395c02e2028">
    </li>
 </ol> 
-<br><br><br>
+<br>
+<hr>
     
 <h3>2023.11.20 ~ 2023.11.27</h3>
  <ol>
@@ -79,6 +85,27 @@
    
   </li>
  </ol>
+ <br>
+ <hr>
+
+ <h3>2023.11.28 ~ 2023.12.05</h3>
+ <ol>
+  <li>
+  <h3>라즈베리파이 데이터 송수신 테스트 완료</h3>
+   <ul>
+    <li>시리얼 통신으로 아두이노 데이터 수신</li>
+    <li>각 센서에 적합하도록 데이터 가공</li>
+    <li>가공 데이터를 비동기 처리를 통해 소켓 함수에 전달</li>
+    <li>소켓 정상작동 확인</li>
+   </ul>
+
+   [이미지]
+   <br>
+<img width="171" alt="스크린샷 2023-11-30 오후 2 16 51" src="https://github.com/inhatc-RPi/project/assets/22267184/b7b93353-8786-4356-8a84-b6a2c5854987">
+  </li>
+ </ol>
+  <br>
+ <hr>
    
 
 # #️ 참조

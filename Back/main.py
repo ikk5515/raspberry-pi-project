@@ -1,5 +1,6 @@
-from fastapi import FastAPI, WebSocket, Request
-from typing import List
+import asyncio
+
+from fastapi import FastAPI, WebSocket, Request, BackgroundTasks
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 from starlette.middleware.cors import CORSMiddleware
@@ -34,11 +35,13 @@ async def home(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
 # DB 연동 api
-# 모든 센서 정보
+# 모든 센서 정보(센서 리스트 반환)
 @app.get("/sensors")
 def read_sensors():
-    sensors = session.query(SensorTable).all()
-    return sensors
+    # sensors = session.query(SensorTable).distinct(SensorTable.sensor_name).all()
+    sensors = session.query(SensorTable.sensor_name).distinct().all()
+    sensor_list = [sensor[0] for sensor in sensors]
+    return sensor_list
 
 # 특정 센서 정보
 @app.get("/sensors/{sensor_name}")
@@ -46,11 +49,23 @@ def read_sensor(sensor_name: str):
     sensor = session.query(SensorTable).filter(SensorTable.sensor_name == sensor_name).all()
     return sensor
 
-# 센서 주기 변경
-# @app.put("/change/{sensor_name}")
-# def change_cycle(sensors : List[Sensor], sensor_name: str):
-#     sensor = session.query(SensorTable).filter(SensorTable.sensor_name == sensor_name).first()
-#
+# 센서 측정 주기 변경
+
+# asyncio 이벤트, WebSocket을 통해 데이터를 전송할 때 신호를 보내기 위한 것
+send_data_event = asyncio.Event()
+
+@app.post("/change")
+async def change_cycle(item: Item, background_tasks: BackgroundTasks):
+    # 소켓통신으로 입력받은 주기 넘기기
+    # global websocket_global
+    # if websocket_global:
+    #     await websocket_global.send_text({item})
+    global test123
+    test123 = item
+
+    send_data_event.set()
+
+    return item
 
 # 웹 소켓 연결
 connected_clients = set()
@@ -65,6 +80,11 @@ async def websocket_sensor_data(websocket: WebSocket):
 
     try:
         while True:
+            await asyncio.sleep(0)
+
+            if send_data_event.is_set():
+                await websocket_global.send_text({test123})
+
             data = await websocket.receive_text()  # client 메시지 수신대기
             print(f"message received : {data} from : {websocket.client}")
 
@@ -81,29 +101,16 @@ async def websocket_sensor_data(websocket: WebSocket):
             session.add(mea_value)
             session.commit()
 
-            global testValue # 받아온 data 전역 변수로 사용
-            testValue = data
+            # global testValue # 받아온 data 전역 변수로 사용
+            # testValue = data
             # server_value = "tttt"
             # await websocket.send_text({server_value}) # client에 메시지 전달
+            send_data_event.clear()
 
     except WebSocketDisconnect:
         print(f"WebSocket connection disconnected")
     except Exception as e:
         print(f"WebSocket connection closed: {e}")
-
-# 센서 값 확인
-@app.get("/view/{sensor}")
-async def view_value(sensor: str):
-    return {"message": f"{sensor}의 측정 값 : {testValue}"}
-
-# 센서 측정 주기 변경
-@app.post("/change")
-async def change_cycle(item: Item):
-    # 소켓통신으로 입력받은 주기 넘기기
-    global websocket_global
-    if websocket_global:
-        await websocket_global.send_text(f"cycle:{item.cycle}")
-    return item
 
 if __name__ == "__main__":
     import uvicorn
