@@ -14,4 +14,4 @@ SQLAlchemy
 starlette
 typing_extensions
 uvicorn
-websockets
+websockets==12.0
