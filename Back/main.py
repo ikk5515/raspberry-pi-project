@@ -29,7 +29,7 @@ class Item(BaseModel):
     name: str
     cycle: int
 
-# 기본 메인페이지
+# 기본 메인페이지(프론트 연결 시 삭제 예정)
 @app.get("/")
 async def home(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
@@ -50,62 +50,46 @@ def read_sensor(sensor_name: str):
     return sensor
 
 # 센서 측정 주기 변경
-
-# asyncio 이벤트, WebSocket을 통해 데이터를 전송할 때 신호를 보내기 위한 것
-send_data_event = asyncio.Event()
-
 @app.post("/change")
-async def change_cycle(item: Item, background_tasks: BackgroundTasks):
-    # 소켓통신으로 입력받은 주기 넘기기
-    # global websocket_global
-    # if websocket_global:
-    #     await websocket_global.send_text({item})
-    global test123
-    test123 = item
-
-    send_data_event.set()
-
-    return item
+async def change_cycle(item: Item):
+    change_value = item.name + ":" + str(item.cycle)
+    for client in connected_clients:
+        try:
+            await client.send_text(change_value)
+        except WebSocketDisconnect:
+            connected_clients.remove(client)
+    return change_value
 
 # 웹 소켓 연결
 connected_clients = set()
-websocket_global = None
 
 @app.websocket("/ws")
 async def websocket_sensor_data(websocket: WebSocket):
-    global websocket_global
-    await websocket.accept()  # client의 websocket접속 허용
+    # client의 websocket접속 허용
+    await websocket.accept()
     connected_clients.add(websocket)
-    websocket_global = websocket
 
     try:
         while True:
+            # 메시지를 수신받기 위해 이벤트 루프(소켓)에 cpu양보
             await asyncio.sleep(0)
 
-            if send_data_event.is_set():
-                await websocket_global.send_text({test123})
-
-            data = await websocket.receive_text()  # client 메시지 수신대기
+            # client 메시지 수신대기
+            data = await websocket.receive_text()
             print(f"message received : {data} from : {websocket.client}")
 
             # DB 저장 로직
             sensor_name, measure_value = data.split(":")
             print(sensor_name, '///', measure_value, '///', datetime.now())
 
-            mea_value = SensorTable(
+            insert_value = SensorTable(
                 sensor_name=sensor_name,
                 measure_value=float(measure_value),
                 measure_time=datetime.now(),
             )
 
-            session.add(mea_value)
+            session.add(insert_value)
             session.commit()
-
-            # global testValue # 받아온 data 전역 변수로 사용
-            # testValue = data
-            # server_value = "tttt"
-            # await websocket.send_text({server_value}) # client에 메시지 전달
-            send_data_event.clear()
 
     except WebSocketDisconnect:
         print(f"WebSocket connection disconnected")
