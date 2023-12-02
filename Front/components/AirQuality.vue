@@ -4,7 +4,7 @@
     <div class="input-group">
       <select v-model="selectedSensor" class="select-sensor">
         <option v-for="sensor in sensorList" :key="sensor" :value="sensor">{{ sensor }}</option>
-        <!-- 다른 센서 옵션을 추가 -->
+        <!-- 다른 센서 옵션을 추가! -->
       </select>
       <button @click="getData" class="get-data-button">Get Data</button>
     </div>
