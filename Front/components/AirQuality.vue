@@ -3,11 +3,14 @@
     <img src="@/assets/inhatc.png" alt="로고" class="logo" />
     <!--<h1>센서 값</h1>-->
     <div class="input-group">
+      <div class="sensor-average" :style="{ color: averageValue > 1000 ? 'red' : 'black' }">
+        <h4>평균 값: {{ averageValue }}</h4>
+      </div>
       <select v-model="selectedSensor" class="select-sensor">
         <option v-for="sensor in sensorList" :key="sensor" :value="sensor">{{ sensor }}</option>
         <!-- 다른 센서 옵션을 추가 -->
       </select>
-      <button @click="getData" class="get-data-button">Get Data</button>
+      <button @click="getData" class="get-data-button">Chart</button>
     </div>
     <div v-if="responseData" class="chart-container">
       <canvas ref="chartCanvas" class="chart-canvas"></canvas>
@@ -33,7 +36,8 @@ export default {
       responseData: null,
       chart: null,
       cycleValue: 3000,
-      sensorList: [] // 센서 리스트를 저장할 배열 추가
+      sensorList: [],
+      averageValue: 0 // 평균값을 저장할 변수 추가
     };
   },
   methods: {
@@ -49,22 +53,23 @@ export default {
       try {
         const response = await axios.get(`https://port-0-raspberry-pi-project-5mk12alpbcv53c.sel5.cloudtype.app/sensors/graph/${this.selectedSensor}`);
         this.responseData = response.data;
-        this.renderChart(); // 데이터를 가져온 후 차트를 렌더링
-        this.calculateAverage();
+        const average = this.calculateAverage(); // 평균값 계산
+        this.renderChart(average); // 차트 렌더링에 평균값 전달
+              
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     },
-
     calculateAverage() {
       const values = this.responseData.map(item => item.measure_value);
       const sum = values.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
       const average = sum / values.length;
-      const roundedAverage = average.toFixed(0); // 평균 값을 1의 자리로 반올림
+      const roundedAverage = average.toFixed(0);
       console.log(`선택된 센서에 대한 값의 평균: ${roundedAverage}`);
       this.averageValue = roundedAverage;
+      return roundedAverage; // 평균값 반환
     },
-    renderChart() {
+    renderChart(average) {
       if (this.chart) {
         this.chart.destroy(); // 기존 차트 제거
       }
@@ -73,7 +78,7 @@ export default {
 
       this.responseData.forEach(item => {
         const date = new Date(item.measure_time);
-        const month = date.getMonth() + 1; // getMonth()는 0부터 시작하므로 +1.
+        const month = date.getMonth() + 1;
         const day = date.getDate();
         const hours = date.getHours();
         const minutes = date.getMinutes();
@@ -92,9 +97,17 @@ export default {
             {
               label: `${this.selectedSensor} Values`,
               data: values,
-              backgroundColor: 'rgba(75, 192, 192, 0.2)',
-              borderColor: 'rgba(75, 192, 192, 1)',
-              borderWidth: 1
+              backgroundColor: 'rgba(75, 192, 192, 1)',
+              borderColor: 'rgba(75, 192, 192, 1)', // 센서 값 선의 색상을 연한 파란색으로 변경
+              borderWidth: 3
+            },
+            {
+              label: 'Average',
+              data: Array(values.length).fill(average),
+              borderColor: 'rgba(0, 0, 200, 0.3)', // 평균값 선의 색상을 파란색으로 변경
+              borderWidth: 1, // 두께를 2로 증가
+              borderDash: [5, 3], // 점선 스타일을 [5, 3]으로 변경하여 더 짧은 점선으로 조정
+              fill: false
             }
           ]
         },
@@ -108,20 +121,19 @@ export default {
       try {
         const requestBody = {
           name: this.selectedSensor,
-          cycle: this.cycleValue // 입력한 주기 값을 가져와 전송
+          cycle: this.cycleValue
         };
 
         const response = await axios.post('https://port-0-raspberry-pi-project-5mk12alpbcv53c.sel5.cloudtype.app/change', requestBody);
         console.log('POST 요청 성공:', response.data);
 
-        // 싸이클 값을 변경하고 난 후, 다시 데이터를 가져오는 등 추가 작업 수행 가능
       } catch (error) {
         console.error('POST 요청 실패:', error);
       }
     }
   },
   mounted() {
-    this.getSensorList(); // 마운트 시 센서 리스트를 가져옴
+    this.getSensorList();
     this.getData();
   }
 };
@@ -129,8 +141,8 @@ export default {
 
 <style>
 .container {
-  max-width: 800px;
-  margin: 140px auto 0; /* 상단 여백을 조정하여 컨테이너를 상단에서 20px 떨어지게 설정 */
+  max-width: 1000px;
+  margin: 150px auto 0; /* 상단 여백을 조정하여 컨테이너를 상단에서 20px 떨어지게 설정 */
   padding: 20px;
   font-family: 'Arial', sans-serif;
   background-color: #f5f5f5;
@@ -175,6 +187,7 @@ h1 {
   top: 30px; /* 컨테이너 상단에서의 위치 조정 */
   left: 30px; /* 컨테이너 왼쪽에서의 위치 조정 */
 }
+
 .get-data-button, .change-cycle-button {
   padding: 10px 20px;
   border: none;
@@ -183,6 +196,10 @@ h1 {
   color: #fff;
   cursor: pointer;
   transition: background-color 0.3s;
+}
+.get-data-button{
+  font-size: 12px;
+  padding: 5px 10px;
 }
 
 .get-data-button:hover, .change-cycle-button {
@@ -225,6 +242,10 @@ h1 {
 .change-cycle-button {
   padding: 10px 18px;
   background-color: #4285f4;
+}
+.sensor-average{
+  margin-left: 10px;
+  font-size:15px;
 }
 /* ... */
 </style>
