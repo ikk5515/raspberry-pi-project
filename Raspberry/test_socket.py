@@ -17,8 +17,6 @@ async def send_data(websocket, tmp_data):
     try:
         temp_data = tmp_data
         print(f"{temp_data} in try")
-        print(3)
-        print(4)
         print(f"server_value는 이거 입니다~ {server_value}")
         await websocket.send(temp_data)
     except:
@@ -40,7 +38,7 @@ async def receive_data(websocket):
             print(f"Received data from the server: {server_value}")
             send_task.cancel()  # 기존의 send_task를 취소합니다.
             send_task = asyncio.ensure_future(
-                arduino_rasp.arduino_data(websocket, server_value))  # 새로운 send_task를 생성합니다.
+                arduino_rasp.arduino_data(websocket))  # 새로운 send_task를 생성합니다.
         except websockets.ConnectionClosed:
             traceback.print_exc()
             print("Connection closed by the server.")
@@ -52,7 +50,7 @@ async def main():
             # send, receive 메소드를 비동기적으로 실행
             # send_task = asyncio.ensure_future(send_data(websocket))
             send_task = asyncio.ensure_future(
-                arduino_rasp.arduino_data(websocket, server_value))  # server_value 인자를 제거합니다.
+                arduino_rasp.arduino_data(websocket))  # server_value 인자를 제거합니다.
             receive_task = asyncio.ensure_future(receive_data(websocket))
 
             # 두 task 동시에 실행
