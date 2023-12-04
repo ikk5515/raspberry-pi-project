@@ -115,6 +115,7 @@
  - DBpia: [라즈베리파이와 가스센서를 이용한 화재 및 가스누출 감지기 개발](https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE07467666)
  - vue_api: [vue와 api연동](https://jeong-dev-blog.tistory.com/4)
  - 농도 표: [위험 농도 수치표](https://thepoc.co.kr/57)
+ - 일산화탄소 위험도 : [일산화탄소 위험도 농도](http://www.gasnews.com/news/articleView.html?idxno=100107)
 
 
 
