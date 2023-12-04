@@ -6,7 +6,7 @@ from pydantic import BaseModel
 from starlette.middleware.cors import CORSMiddleware
 from starlette.staticfiles import StaticFiles
 from starlette.websockets import WebSocketDisconnect
-from datetime import datetime
+from datetime import datetime, timedelta
 from database import session
 from models import SensorTable, Sensor
 
@@ -94,7 +94,7 @@ async def websocket_sensor_data(websocket: WebSocket):
             insert_value = SensorTable(
                 sensor_name=sensor_name,
                 measure_value=float(measure_value),
-                measure_time=datetime.now(),
+                measure_time=datetime.now() + timedelta(hours=9),
             )
 
             session.add(insert_value)

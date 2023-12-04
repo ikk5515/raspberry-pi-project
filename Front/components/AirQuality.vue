@@ -1,12 +1,16 @@
 <template>
   <div class="container">
-    <h1>센서 값</h1>
+    <img src="@/assets/inhatc.png" alt="로고" class="logo" />
+    <!--<h1>센서 값</h1>-->
     <div class="input-group">
+      <div class="sensor-average" :style="{ color: averageValue > 1000 ? 'red' : 'black' }">
+        <h4>평균 값: {{ averageValue }}</h4>
+      </div>
       <select v-model="selectedSensor" class="select-sensor">
         <option v-for="sensor in sensorList" :key="sensor" :value="sensor">{{ sensor }}</option>
-        <!-- 다른 센서 옵션을 추가! -->
+        <!-- 다른 센서 옵션을 추가 -->
       </select>
-      <button @click="getData" class="get-data-button">Get Data</button>
+      <button @click="getData" class="get-data-button">Chart</button>
     </div>
     <div v-if="responseData" class="chart-container">
       <canvas ref="chartCanvas" class="chart-canvas"></canvas>
@@ -14,9 +18,9 @@
 
     <!-- 싸이클 POST -->
     <div class="input-group">
-      <label for="cycleValue">Cycle Value:</label>
+      <label for="cycleValue">측정주기:</label>
       <input type="number" v-model="cycleValue" id="cycleValue" />
-      <button @click="changeCycle" class="change-cycle-button">Change Cycle</button>
+      <button @click="changeCycle" class="change-cycle-button">변경</button>
     </div>
   </div>
 </template>
@@ -32,7 +36,8 @@ export default {
       responseData: null,
       chart: null,
       cycleValue: 3000,
-      sensorList: [] // 센서 리스트를 저장할 배열 추가
+      sensorList: [],
+      averageValue: 0 // 평균값을 저장할 변수 추가
     };
   },
   methods: {
@@ -48,12 +53,23 @@ export default {
       try {
         const response = await axios.get(`https://port-0-raspberry-pi-project-5mk12alpbcv53c.sel5.cloudtype.app/sensors/graph/${this.selectedSensor}`);
         this.responseData = response.data;
-        this.renderChart(); // 데이터를 가져온 후 차트를 렌더링
+        const average = this.calculateAverage(); // 평균값 계산
+        this.renderChart(average); // 차트 렌더링에 평균값 전달
+              
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     },
-    renderChart() {
+    calculateAverage() {
+      const values = this.responseData.map(item => item.measure_value);
+      const sum = values.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+      const average = sum / values.length;
+      const roundedAverage = average.toFixed(0);
+      console.log(`선택된 센서에 대한 값의 평균: ${roundedAverage}`);
+      this.averageValue = roundedAverage;
+      return roundedAverage; // 평균값 반환
+    },
+    renderChart(average) {
       if (this.chart) {
         this.chart.destroy(); // 기존 차트 제거
       }
@@ -62,7 +78,7 @@ export default {
 
       this.responseData.forEach(item => {
         const date = new Date(item.measure_time);
-        const month = date.getMonth() + 1; // getMonth()는 0부터 시작하므로 +1.
+        const month = date.getMonth() + 1;
         const day = date.getDate();
         const hours = date.getHours();
         const minutes = date.getMinutes();
@@ -81,9 +97,17 @@ export default {
             {
               label: `${this.selectedSensor} Values`,
               data: values,
-              backgroundColor: 'rgba(75, 192, 192, 0.2)',
-              borderColor: 'rgba(75, 192, 192, 1)',
-              borderWidth: 1
+              backgroundColor: 'rgba(75, 192, 192, 1)',
+              borderColor: 'rgba(75, 192, 192, 1)', // 센서 값 선의 색상을 연한 파란색으로 변경
+              borderWidth: 3
+            },
+            {
+              label: 'Average',
+              data: Array(values.length).fill(average),
+              borderColor: 'rgba(0, 0, 200, 0.3)', // 평균값 선의 색상을 파란색으로 변경
+              borderWidth: 1, // 두께를 2로 증가
+              borderDash: [5, 3], // 점선 스타일을 [5, 3]으로 변경하여 더 짧은 점선으로 조정
+              fill: false
             }
           ]
         },
@@ -97,20 +121,19 @@ export default {
       try {
         const requestBody = {
           name: this.selectedSensor,
-          cycle: this.cycleValue // 입력한 주기 값을 가져와 전송
+          cycle: this.cycleValue
         };
 
         const response = await axios.post('https://port-0-raspberry-pi-project-5mk12alpbcv53c.sel5.cloudtype.app/change', requestBody);
         console.log('POST 요청 성공:', response.data);
 
-        // 싸이클 값을 변경하고 난 후, 다시 데이터를 가져오는 등 추가 작업 수행 가능
       } catch (error) {
         console.error('POST 요청 실패:', error);
       }
     }
   },
   mounted() {
-    this.getSensorList(); // 마운트 시 센서 리스트를 가져옴
+    this.getSensorList();
     this.getData();
   }
 };
@@ -118,14 +141,15 @@ export default {
 
 <style>
 .container {
-  max-width: 800px;
-  margin: 0 auto;
+  max-width: 1000px;
+  margin: 150px auto 0; /* 상단 여백을 조정하여 컨테이너를 상단에서 20px 떨어지게 설정 */
   padding: 20px;
   font-family: 'Arial', sans-serif;
-  background-color: #f9f9f9;
+  background-color: #f5f5f5;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
+
 
 h1 {
   text-align: center;
@@ -136,21 +160,36 @@ h1 {
 .input-group {
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
+  justify-content: flex-end;
 }
 
+.label {
+  margin-right: 10px; /* 라벨과 인풋 사이의 간격 조절 */
+}
+#cycleValue {
+  text-align: right;
+}
 .select-sensor {
-  flex: 1;
-  padding: 10px;
-  font-size: 16px;
+  flex: 0 0 auto; /* 유연한 크기 조정을 막고 고정 크기로 설정 */
+  width: 150px; /* 원하는 크기로 설정 */
+  padding: 8px; /* 적절한 패딩 적용 */
+  font-size: 14px;
   border: 1px solid #ccc;
   border-radius: 4px;
+  margin-left: auto; /* 오른쪽으로 배치 */
+  margin-right: 10px; /* 오른쪽 여백 설정 */
   outline: none;
 }
+.logo {
+  width: 200px; /* 로고 이미지의 너비 설정 */
+  height: auto; /* 높이 자동 조정 */
+  position: absolute; /* 위치를 설정하기 위해 절대 위치 지정 */
+  top: 30px; /* 컨테이너 상단에서의 위치 조정 */
+  left: 30px; /* 컨테이너 왼쪽에서의 위치 조정 */
+}
 
-.get-data-button {
+.get-data-button, .change-cycle-button {
   padding: 10px 20px;
-  margin-left: 10px;
   border: none;
   border-radius: 4px;
   background-color: #4caf50;
@@ -158,8 +197,12 @@ h1 {
   cursor: pointer;
   transition: background-color 0.3s;
 }
+.get-data-button{
+  font-size: 12px;
+  padding: 5px 10px;
+}
 
-.get-data-button:hover {
+.get-data-button:hover, .change-cycle-button {
   background-color: #45a049;
 }
 
@@ -168,10 +211,41 @@ h1 {
   padding: 20px;
   border-radius: 4px;
   background-color: #fff;
+  display: flex; /* 부모 요소를 플렉스로 설정하여 자식 요소를 정렬 */
+  justify-content: center; /* 가로 방향 가운데 정렬 */
+  align-items: center; /* 세로 방향 가운데 정렬 */
+  margin-top: 20px; /* 상단 여백을 추가하여 차트를 조금 더 아래쪽에 배치 */
 }
 .chart-canvas {
   width: 100%; /* 차트 요소를 부모 요소의 100%로 설정 */
   height: 400px; /* 원하는 높이로 설정하세요 */
+}
+.cycle-input {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.cycle-input label {
+  margin-right: 10px;
+}
+
+#cycleValue {
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100px;
+  margin-right: 10px;
+}
+
+.change-cycle-button {
+  padding: 10px 18px;
+  background-color: #4285f4;
+}
+.sensor-average{
+  margin-left: 10px;
+  font-size:15px;
 }
 /* ... */
 </style>
